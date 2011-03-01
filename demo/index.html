@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	
+		<title>Twitter like Notification Demo</title>
+		<link href="../src/notify.css" rel="stylesheet" type="text/css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script src="../src/notify.js"></script>
+		
+		<script>
+			$(document).ready(function(){
+			  
+				var dummyText = ["This is dummy text 1", "This is dummy text 2", "This is dummy text 3"];				
+
+				$("a").click(function(e){
+				  e.preventDefault();
+				  
+					$.notify.show( {msg: dummyText[Math.floor(Math.random() * dummyText.length)], timeOut: 5000 });
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<a href="#">Show Notification</a>
+	</body>
+</html>

@@ -1,86 +1,66 @@
-/*
- * notify.js
- * Twitter like notifications plugin
+/**
+ * Old Twitter-like Notification
  *
  * MIT License
  *
- * required jQuery 1.4.2 or higher
- *
  * Ashit Vora (a.k.vora@gmail.com)
- * 05/09/2010
- *
+ * Tested on jQuery 1.5.1
  *
  * Usage
- * -----
- * $.notify.show({msg: "This is the message to show", timeOut: "Time after which it should disappear. Leave it blank if you want user to close it"});
  *
+ *  $.notify.show({ 
+ *    msg: "Message to display", 
+ *    sticky: if TRUE, don't auto hide. else hide after 10 seconds
+ *  });
  *
  */
 
 (function($, undefined){
-	$.notify = {
+    
+    var container = $("<div class='notify'>"),
+        timeOut = 10000;
+    
+    $.notify = {};
+    
+    
+    $.notify.init = function(){
+		$("body").append(container);
 		
-		notifyDiv :{},
+		container.click(function(){
+		    $.notify.hide();
+		});
+    };
+    
+    
+    
+    $.notify.show = function(config){
+        var msg    = config.msg !== "undefined" ? $.trim(config.msg) : "",
+			sticky = config.sticky !== "undefined" && config.sticky === true;
 		
-		init : function(){
-			//Message Container
-			this.notifyDiv = $("<div>");
+		if( msg.length > 0 ){
 			
-			//style the container
-			this.notifyDiv.css({
-				"width" : "100%",
-				"padding" : "10px 20px",
-				"margin" : "0",
-				"fontSize" : "20px",
-				"fontFamily" : "'Lucida Grande', Verdana",
-				"textAlign" : "center",
-				"position" : "fixed",
-				"top" : "0",
-				"left" : "0",
-				"zIndex" : "1000",
-				"backgroundColor" : "#fff",
-				"display" : "none",
-				"overflow" : "visible",
-				"borderBottom" : "1px solid #aaa",
-				"cursor" : "pointer"
-			});
+			container.html(msg).slideDown();
 			
-			//add it to the body
-			$("body").append(this.notifyDiv);
+			if(! sticky){	
+				setTimeout(function(){
+					$.notify.hide();
+				}, timeOut);
+			}
 			
-			var self = this;
-			this.notifyDiv.bind("click", function(){
-				self.hide();
-			});
-		},
-		
-		show : function(){
-			var args = arguments[0],
-				msg = args.msg !== undefined && args.msg.length > 0 ? args.msg : "",
-				timeOut = args.timeOut !== undefined && parseInt(args.timeOut, 10) > 0 ? args.timeOut : 0,
-				self = this;
-
-			//add the message and make it visible
-			this.notifyDiv.text(msg).slideDown(function(){
-				
-				//if timeOut was passed as an argument, hide the notify bar after that time otherwise leave it as is.
-				if(timeOut > 0){
-					setTimeout(function(){
-						self.hide();
-					}, timeOut);
-				}
-
-			});
-		},
-		
-		hide : function(){
-			this.notifyDiv.slideUp();
 		}
 		
-	};
+        
+    };
+    
+    
+    
+    $.notify.hide = function(){
+        container.slideUp();
+    };
+    
+	
 	
 	$("document").ready(function(){
-		//Initialize it
 		$.notify.init();
 	});
 	
